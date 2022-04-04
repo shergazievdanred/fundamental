@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 // import Counter from './components/Counter';
 // import ClassCount from './components/ClassCounter'
@@ -22,17 +22,38 @@ function App() {
     { id: 2, title: 'PHP', body: 'Description'}
   ])
 
+  const [title, setTitle] = useState('')
+  
+  const bodyInputRef = useRef()
+
+  const addNewPost = (e) => {
+    e.preventDefault()
+    console.log(title)
+    console.log(bodyInputRef.current.value)
+  }
+
+
   return (
     <div className="App">
         {/* <Input/>
         <Counter/>
         <ClassCount /> 
         <br/> */}
-
-        <form>
-          <MyInput type="text" placeholder="Название поста"/>
-          <MyInput type="text" placeholder="Описание поста" />
-          <MyButton disabled>Создать пост</MyButton>
+      <form>
+        {/* Управляемый компонент */}
+          <MyInput
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            type="text"
+            placeholder="Название поста"
+        />
+        {/* Неуправляемый/неконтролируемый компонент  */}
+          <MyInput
+            ref={bodyInputRef}
+            type="text"
+            placeholder="Описание поста"
+          />
+            <MyButton onClick = {addNewPost}>Создать пост</MyButton>
         </form>
 
         <PostList posts={posts} title="Стэк 1" />
