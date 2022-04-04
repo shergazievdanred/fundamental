@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Container } from 'react-bootstrap';
 
 // import Counter from './components/Counter';
 // import ClassCount from './components/ClassCounter'
 // import Input from './components/Input';
 import PostList from './components/PostList';
+import MyButton from './components/UI/button/MyButton';
+import MyInput from './components/UI/input/MyInput';
 import './styles/App.css'
 
 
@@ -23,15 +24,19 @@ function App() {
 
   return (
     <div className="App">
-      <Container>
         {/* <Input/>
         <Counter/>
         <ClassCount /> 
         <br/> */}
+
+        <form>
+          <MyInput type="text" placeholder="Название поста"/>
+          <MyInput type="text" placeholder="Описание поста" />
+          <MyButton disabled>Создать пост</MyButton>
+        </form>
+
         <PostList posts={posts} title="Стэк 1" />
         <PostList posts={posts2} title="Стэк 2"/>
-      </Container>
-
     </div>
   );
 }
