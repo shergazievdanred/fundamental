@@ -9,9 +9,10 @@ import MyButton from './components/UI/button/MyButton';
 import { usePosts } from './hooks/usePosts';
 import PostService from './API/postServise';
 import { useFetching } from './hooks/useFetching';
-import { getPageCount, getPagesArray } from './utils/pages';
-
+import { getPageCount } from './utils/pages';
+import Pagin from './components/UI/pagination/Pagination';
 import './styles/App.css'
+
 
 function App() {
 
@@ -24,9 +25,8 @@ function App() {
 
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
-  let pageArray = getPagesArray(totalPages);
 
-  const [fetchPosts, isPostLading, postError] = useFetching(async () => {
+  const [fetchPosts, isPostLading, postError] = useFetching(async (limit, page) => {
     const response = await PostService.getAll(limit, page);
     setPosts(response.data)
     const totalCount = response.headers['x-total-count']
@@ -34,8 +34,8 @@ function App() {
   })
 
   useEffect(() => {
-    fetchPosts()
-  }, [page])
+    fetchPosts(limit, page)
+  }, [])
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
@@ -48,6 +48,7 @@ function App() {
 
   const changePage = (page) => {
     setPage(page);
+    fetchPosts(limit, page)
   }
 
   return (
@@ -70,16 +71,11 @@ function App() {
         ? <div style={{display: 'flex', justifyContent: 'center', marginTop: 50}}><Loader/></div>
         :<PostList remove={removePost} posts={sortedAndSearchedPosts} title="Стэк технологий" />
       }
-      <div className='page__wrapper'>
-        {pageArray.map(p => 
-          <span
-            onClick={() => changePage(p)}
-            key={p}
-            className={page === p ? 'page page__current' : 'page'}>
-            {p}
-          </span>
-          )}
-      </div>
+      <Pagin
+        page={page}
+        changePage={changePage}
+        totalPages={totalPages}
+      />
       
     </div>
   );
